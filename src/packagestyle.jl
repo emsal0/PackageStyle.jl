@@ -12,7 +12,7 @@ function get_using_exprs(prog)::Array{Expr}
         if typeof(arg) == Expr && arg.head == :using
             push!(usings, arg)
         elseif typeof(arg) == Expr
-            cat(usings, get_using_exprs(arg), dims=1)
+            push!(usings, get_using_exprs(arg)...)
         end
     end
 
@@ -50,7 +50,7 @@ function packagestyle(path)
             println("> Parsing $path")
             prog = path |> get_jl_file_expressions 
         catch e
-            throw(Exception(">>> Error parsing $path: $e"))
+            throw(error(">>> Error parsing $path: $e"))
         end
 
         prog |> get_using_exprs |> get_module_names |>
