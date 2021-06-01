@@ -1,5 +1,9 @@
+module PackageStyle
+
 using FileIO
 using Pkg
+
+export pkgify
 
 function get_jl_file_expressions(path)::Expr
     return Meta.parseall(path |> open |> read |> String)
@@ -38,11 +42,11 @@ function add_packages(modules; dir=".")
     end
 end
 
-function packagestyle(path)
+function pkgify(path)
     if isdir(path)
         dir_contents = readdir(path)
         for dpath in dir_contents
-            packagestyle(path * dpath)
+            pkgify(path * dpath)
         end
     else
         prog = nothing
@@ -59,4 +63,4 @@ function packagestyle(path)
     end
 end
 
-packagestyle(ARGS[1])
+end # module packagestyle
